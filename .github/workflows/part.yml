@@ -1,0 +1,45 @@
+name: Sync Folder to Part Branch
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '合集__全流程 Folder_All_in_one/【TTenYX】 全流程蓝图包*'
+  workflow_dispatch:
+
+jobs:
+  sync_folder:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout main branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: main
+          sparse-checkout: |
+            '合集__全流程 Folder_All_in_one/【TTenYX】 全流程蓝图包*'
+
+      - name: Checkout main branch
+        uses: actions/checkout@v4
+        with:
+          ref: part
+          path: part
+          
+      - name: Setup git
+        uses: actions4git/setup-git@v1
+
+      - name: Sync folder to part branch
+        run: |
+          cd main
+          path1="合集__全流程 Folder_All_in_one"
+          path2="`ls \"${path1}/\"`"
+          path0="./${path1}/${path2}"
+          diff -rq "${path0}" '../part/TTenYX'
+          if [ $? -eq 1 ]; then
+            cp -rf "${path0}/" '../part/TTenYX/'
+            cd ../part
+            git commit -am 'action sync'
+            git push origin part
+          fi
