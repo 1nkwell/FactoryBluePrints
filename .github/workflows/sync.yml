@@ -13,6 +13,6 @@ jobs:
       - uses: tgymnich/fork-sync@v2.0
         with:
           token: ${{ secrets.PERSONAL_TOKEN }}
-          owner: FactoryBluePrints
+          owner: DSPBluePrints
           base: main
           head: main
